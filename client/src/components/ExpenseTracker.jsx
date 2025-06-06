@@ -1,3 +1,5 @@
+// ExpenseTracker.jsx (Updated to use public API)
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
@@ -27,7 +29,7 @@ const ExpenseTracker = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
-  const API = 'http://localhost:4000/transactions';
+  const API = import.meta.env.VITE_API_URL + '/transactions';
   const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
@@ -70,7 +72,6 @@ const ExpenseTracker = () => {
 
     try {
       const res = await axios.post(API, newTxn);
-      console.log("Saved transaction:", res.data);
       setTransactions([res.data, ...transactions]);
 
       setDesc('');
@@ -99,7 +100,7 @@ const ExpenseTracker = () => {
       ...(endDate && { endDate })
     });
 
-    window.open(`http://localhost:4000/transactions/export?${query.toString()}`, '_blank');
+    window.open(`${import.meta.env.VITE_API_URL}/transactions/export?${query.toString()}`, '_blank');
   };
 
   return (
@@ -126,21 +127,11 @@ const ExpenseTracker = () => {
         onChange={(e) => setEndDate(e.target.value)}
       />
 
-      <Button
-        variant="outlined"
-        fullWidth
-        sx={{ my: 1 }}
-        onClick={fetchTransactions}
-      >
+      <Button variant="outlined" fullWidth sx={{ my: 1 }} onClick={fetchTransactions}>
         Apply Date Filter
       </Button>
 
-      <Button
-        variant="outlined"
-        fullWidth
-        sx={{ mb: 2 }}
-        onClick={exportToExcel}
-      >
+      <Button variant="outlined" fullWidth sx={{ mb: 2 }} onClick={exportToExcel}>
         Export as Excel
       </Button>
 
@@ -186,12 +177,7 @@ const ExpenseTracker = () => {
         margin="normal"
       />
 
-      <Button
-        variant="contained"
-        fullWidth
-        sx={{ mt: 2 }}
-        onClick={addTransaction}
-      >
+      <Button variant="contained" fullWidth sx={{ mt: 2 }} onClick={addTransaction}>
         ADD
       </Button>
 
